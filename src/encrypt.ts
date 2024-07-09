@@ -67,11 +67,10 @@ export async function decryptFile(encFilePath: string, password: string) {
   const encFileParse = parse(encFilePath);
   const encFile = await Deno.readFile(encFilePath);
   const decryptBuffer = await decrypt(encFile, password);
-  if (decryptBuffer) {
-    const decFilePath = join(encFileParse.dir, "decrypt_" + encFileParse.name);
-    await Deno.writeFile(decFilePath, new Uint8Array(decryptBuffer));
-    return encFilePath;
-  } else {
-    console.log("Unexpected error");
+  if (!decryptBuffer) {
+    throw new Error("cannot decrypt file");
   }
+  const decFilePath = join(encFileParse.dir, "decrypt_" + encFileParse.name);
+  await Deno.writeFile(decFilePath, new Uint8Array(decryptBuffer));
+  return decFilePath;
 }
