@@ -1,0 +1,18 @@
+{
+  "tasks": {
+    "dev": "deno run --watch -A main.ts",
+    "prebuild": "deno run -A preBuild.ts",
+    "build": "deno task prebuild && deno compile -A --target=x86_64-pc-windows-msvc --output=build/jhcis_backup_to_any main.ts"
+  },
+  "imports": {
+    "@aws-sdk/client-s3": "npm:@aws-sdk/client-s3@^3.609.0",
+    "@std/dotenv": "jsr:@std/dotenv@^0.224.2",
+    "@std/fs": "jsr:@std/fs@^0.229.3",
+    "@std/path": "jsr:@std/path@^0.225.2",
+    "date-fns": "npm:date-fns@^3.6.0",
+    "zod": "npm:zod@^3.23.8"
+  },
+  "unstable": [
+    "cron"
+  ]
+}
