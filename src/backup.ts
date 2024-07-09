@@ -16,7 +16,7 @@ export const makeBackupFile = async (
     tempDir,
     `${pcuCode}_${database}_${format(new Date(), "yyyy_MM_dd_HH_mm_ss")}.sql`
   );
-  await new Deno.Command("cmd", {
+  const p = await new Deno.Command("cmd", {
     args: [
       "cmd",
       "/C",
@@ -29,6 +29,9 @@ export const makeBackupFile = async (
       `--password=${password}`,
     ],
   }).output();
+  if (!p.success) {
+    throw new Error(new TextDecoder().decode(p.stderr));
+  }
   console.log("Backup file created!", new Date().toLocaleString());
   return tempFilePath;
 };
