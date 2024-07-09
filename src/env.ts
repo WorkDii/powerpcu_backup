@@ -20,6 +20,7 @@ const schema = z.object({
   PASSWORD: z.string(),
   PCUCODE: z.string(),
   SCHEDULE: z.string().optional().default("30 3 * * *"),
+  LOCAL_BACKUP_PATH: z.string(),
 });
 
 

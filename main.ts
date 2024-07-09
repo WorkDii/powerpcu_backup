@@ -4,6 +4,8 @@ import env from "./src/env.ts";
 import { uploadFile } from "./src/upload.ts";
 import { encryptFile } from "./src/encrypt.ts";
 import config from './config.json' with { type: "json" };
+import { removeTemp } from "./src/removeTemp.ts";
+import { uploadToLocal } from "./src/uploadToLocal.ts";
 
 async function job() {
   console.log("Start backup database", new Date().toLocaleString());
@@ -20,7 +22,9 @@ async function job() {
   const compressFilePath = await compressFile(backupPath);
   const encFilePath = await encryptFile(compressFilePath, ENCRYPTED_KEY);
   await uploadFile(encFilePath)
+  await uploadToLocal(encFilePath) 
   console.log(backupPath);
+  await removeTemp(backupPath);
   console.log("Backup database done", new Date().toLocaleString());
 }
 
