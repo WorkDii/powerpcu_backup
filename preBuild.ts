@@ -11,5 +11,6 @@ const fileNameEnc = fileName + ".enc"
 await encryptFile(fileName, config.ENCRYPTED_KEY); 
 
 Deno.copyFileSync(fileNameEnc, `build/${fileNameEnc}`);
+Deno.copyFileSync('.env.template', `build/.env`);
 
 copySync('lib', 'build/lib');
