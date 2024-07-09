@@ -9,7 +9,7 @@ async function job() {
   console.log("Start backup database", new Date().toLocaleString());
   const { ENCRYPTED_KEY} = config
   const backupPath = await makeBackupFile(
-    env.MYSQLDUMP_PATH,
+    env.MYSQLDUMP_PATH, 
     env.DATABASE,
     env.HOST,
     env.PORT,
@@ -20,6 +20,7 @@ async function job() {
   const compressFilePath = await compressFile(backupPath);
   const encFilePath = await encryptFile(compressFilePath, ENCRYPTED_KEY);
   await uploadFile(encFilePath)
+  console.log(backupPath);
   console.log("Backup database done", new Date().toLocaleString());
 }
 

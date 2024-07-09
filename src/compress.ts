@@ -1,6 +1,6 @@
 export const compressFile = async (targetPath: string) => {
   const src = await Deno.open(targetPath);
-  const dest = await Deno.open(`${targetPath}.sql.gz`, {
+  const dest = await Deno.open(`${targetPath}.gz`, {
     create: true,
     write: true,
   });
@@ -9,5 +9,5 @@ export const compressFile = async (targetPath: string) => {
     .pipeThrough(new CompressionStream("gzip"))
     .pipeTo(dest.writable);
   console.log("File compressed!", new Date().toLocaleString());
-  return `${targetPath}.sql.gz`;
+  return `${targetPath}.gz`;
 };
