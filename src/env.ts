@@ -19,7 +19,8 @@ const schema = z.object({
   USER: z.string(),
   PASSWORD: z.string(),
   PCUCODE: z.string(),
-  SCHEDULE: z.string().optional().default("30 3 * * *"),
+  // utc time zone
+  SCHEDULE: z.string().optional().default("30 20 * * *"), // is 03:30 bangkok time
   LOCAL_BACKUP_PATH: z.string(),
 });
 
