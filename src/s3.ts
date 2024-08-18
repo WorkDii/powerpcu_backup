@@ -33,6 +33,7 @@ export const removeOldS3 = async (keepDay: number, folder: string) => {
     Prefix: folder,
   });
   const keepDate = addDays(new Date(), -keepDay);
+
   const objectsToDelete = list.Contents?.filter((file) => {
     // deno-lint-ignore no-explicit-any
     const fileDate = new Date(file.LastModified as any);
@@ -55,7 +56,7 @@ export const uploadS3AndRemoveOldS3 = async (
   keepDay: number
 ) => {
   const { name, ext } = parse(filePath);
-  const folder = `${env.PCUCODE}/${env.DATABASE}/${scheduleName}`;
+  const folder = `${env.PREFIX_NAME}/${env.DATABASE}/${scheduleName}`;
   const filename = `${folder}/${name + ext}`;
   await uploadToS3(filePath, filename);
   await removeOldS3(keepDay, folder);

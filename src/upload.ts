@@ -1,46 +1,45 @@
 import { parse } from "@std/path";
-import { uploadS3AndRemoveOldS3, uploadToS3 } from "./s3.ts";
-
-const UPLOAD_STRATEGY = {
-  daily: 14,
-  weekly: 90,
-  monthly: 365 * 2,
-  yearly: 365 * 5,
-};
+import { removeOldS3, uploadS3AndRemoveOldS3, uploadToS3 } from "./s3.ts";
+import env from "./env.ts";
 
 async function uploadToAllFolder(filePath: string) {
   const { name, ext } = parse(filePath);
   await uploadToS3(filePath, `all/${name + ext}`);
+  await removeOldS3(1, "all");
 }
 export async function uploadFile(filePath: string) {
+  console.log(
+    "===========uploadFileToS3============",
+    new Date().toLocaleString()
+  );
   // daily
-  console.log("[daily] Uploading file...", new Date().toLocaleString());
-  await uploadS3AndRemoveOldS3(filePath, "daily", UPLOAD_STRATEGY.daily);
-  console.log("[daily] File uploaded!", new Date().toLocaleString());
-
-  // all
-  console.log("[all] Uploading file...", new Date().toLocaleString());
-  await uploadToAllFolder(filePath);
-  console.log("[all] File uploaded!", new Date().toLocaleString());
+  console.time("[daily] S3");
+  await uploadS3AndRemoveOldS3(filePath, "daily", env.KEEP_FILE_DAILY);
+  console.timeEnd("[daily] S3");
 
   // weekly
   if (new Date().getDay() === 0) {
-    console.log("[weekly] Uploading file...", new Date().toLocaleString());
-    uploadS3AndRemoveOldS3(filePath, "weekly", UPLOAD_STRATEGY.weekly);
-    console.log("[weekly] File uploaded!", new Date().toLocaleString());
+    console.time("[weekly] S3");
+    uploadS3AndRemoveOldS3(filePath, "weekly", env.KEEP_FILE_MONTHLY);
+    console.timeEnd("[weekly] S3");
   }
 
   // monthly
   if (new Date().getDate() === 1) {
-    console.log("[monthly] Uploading file...", new Date().toLocaleString());
-    uploadS3AndRemoveOldS3(filePath, "monthly", UPLOAD_STRATEGY.monthly);
-    console.log("[monthly] File uploaded!", new Date().toLocaleString());
+    console.time("[monthly] S3");
+    uploadS3AndRemoveOldS3(filePath, "monthly", env.KEEP_FILE_MONTHLY);
+    console.timeEnd("[monthly] S3");
   }
 
   // yearly
   if (new Date().getMonth() === 0 && new Date().getDate() === 1) {
-    console.log("[yearly] Uploading file...", new Date().toLocaleString());
-    uploadS3AndRemoveOldS3(filePath, "yearly", UPLOAD_STRATEGY.yearly);
-    console.log("[yearly] File uploaded!", new Date().toLocaleString());
+    console.time("[yearly] S3");
+    uploadS3AndRemoveOldS3(filePath, "yearly", env.KEEP_FILE_YEARLY);
+    console.timeEnd("[yearly] S3");
   }
+
+  // all
+  console.time("[all] S3");
+  await uploadToAllFolder(filePath);
+  console.timeEnd("[all] S3");
 }

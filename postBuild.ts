@@ -1,3 +1,3 @@
 import { zip } from "zip-a-folder";
 
-await zip("build", "jhcis_backup_s3.zip");
+await zip("build", "power_pcu_backup.zip");

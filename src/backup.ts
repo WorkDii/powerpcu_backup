@@ -8,13 +8,13 @@ export const makeBackupFile = async (
   port: string | number,
   user: string,
   password: string,
-  pcuCode: string
+  namePrefix: string
 ) => {
   console.log("Creating backup file...", new Date().toLocaleString());
   const tempDir = await Deno.makeTempDir();
   const tempFilePath = join(
     tempDir,
-    `${pcuCode}_${database}_${format(new Date(), "yyyy_MM_dd_HH_mm_ss")}.sql`
+    `${namePrefix}_${database}_${format(new Date(), "yyMMddHHmm")}.sql`
   );
   const p = await new Deno.Command("cmd", {
     args: [
