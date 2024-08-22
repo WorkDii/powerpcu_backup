@@ -4,6 +4,7 @@
     "specifiers": {
       "jsr:@crypto/aes-gcm@^1.0.0": "jsr:@crypto/aes-gcm@1.0.0",
       "jsr:@std/dotenv@^0.224.2": "jsr:@std/dotenv@0.224.2",
+      "jsr:@std/encoding": "jsr:@std/encoding@1.0.0",
       "jsr:@std/fs@^0.229.3": "jsr:@std/fs@0.229.3",
       "jsr:@std/path@1.0.0-rc.1": "jsr:@std/path@1.0.0-rc.1",
       "jsr:@std/path@^1.0.2": "jsr:@std/path@1.0.2",
@@ -20,6 +21,9 @@
       },
       "@std/dotenv@0.224.2": {
         "integrity": "29081695357e4534696c9e986b2560be29c141ccf52daa32b6c20ff5b5c64ab9"
+      },
+      "@std/encoding@1.0.0": {
+        "integrity": "3cabf87b3eadb69126b42998188c87155238ceef805af3f241acca00ddb0cbb2"
       },
       "@std/fs@0.229.3": {
         "integrity": "783bca21f24da92e04c3893c9e79653227ab016c48e96b3078377ebd5222e6eb",

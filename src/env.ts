@@ -5,6 +5,13 @@ const env = await load();
 const envBuild = await load({ envPath: ".env.build" });
 import { aesGcmDecrypt } from "@crypto/aes-gcm";
 import { join } from "@std/path";
+import { decodeHex } from "jsr:@std/encoding/hex";
+
+const textDecoder = new TextDecoder();
+const hexDecoded = decodeHex(
+  Deno.env.get("ENCRYPTED_KEY") || envBuild["ENCRYPTED_KEY"] || ""
+);
+const defaultEncryptedKey = textDecoder.decode(hexDecoded);
 
 const schema = z.object({
   MYSQLDUMP_PATH: z
@@ -21,13 +28,13 @@ const schema = z.object({
   // utc time zone
   SCHEDULE: z.string().optional().default("30 20 * * *"), // is 03:30 bangkok time
   LOCAL_BACKUP_PATH: z.string(),
-  S3_ENDPOINT: z.string(),
-  S3_REGION: z.string(),
-  S3_ACCESS_KEY_ID: z.string(),
-  S3_SECRET_KEY: z.string(),
-  S3_BUCKET: z.string(),
-  S3_RAR_PASSWORD: z.string(),
-  ENCRYPTED_KEY: z.string(),
+  S3_ENDPOINT: z.string().optional(),
+  S3_REGION: z.string().optional(),
+  S3_ACCESS_KEY_ID: z.string().optional(),
+  S3_SECRET_KEY: z.string().optional(),
+  S3_BUCKET: z.string().optional(),
+  S3_RAR_PASSWORD: z.string().optional(),
+  ENCRYPTED_KEY: z.string().default(defaultEncryptedKey),
   KEEP_FILE_DAILY: z.number().optional().default(14),
   KEEP_FILE_WEEKLY: z.number().optional().default(90),
   KEEP_FILE_MONTHLY: z
@@ -39,31 +46,40 @@ const schema = z.object({
     .optional()
     .default(365 * 5),
 });
-
-const _env = schema.parse({ ...envS3, ...env, ...envBuild });
+const _env = schema.parse({ ...envS3, ...env });
 
 const ENC_KEY = "|encrypted";
-if (_env.S3_ENDPOINT.includes(ENC_KEY)) {
+if (_env.S3_ENDPOINT?.includes(ENC_KEY)) {
   _env.S3_ENDPOINT = await aesGcmDecrypt(
     _env.S3_ENDPOINT.replaceAll(ENC_KEY, ""),
     _env.ENCRYPTED_KEY
   );
+}
+if (_env.S3_ACCESS_KEY_ID?.includes(ENC_KEY)) {
   _env.S3_ACCESS_KEY_ID = await aesGcmDecrypt(
     _env.S3_ACCESS_KEY_ID.replaceAll(ENC_KEY, ""),
     _env.ENCRYPTED_KEY
   );
+}
+if (_env.S3_SECRET_KEY?.includes(ENC_KEY)) {
   _env.S3_SECRET_KEY = await aesGcmDecrypt(
     _env.S3_SECRET_KEY.replaceAll(ENC_KEY, ""),
     _env.ENCRYPTED_KEY
   );
+}
+if (_env.S3_BUCKET?.includes(ENC_KEY)) {
   _env.S3_BUCKET = await aesGcmDecrypt(
     _env.S3_BUCKET.replaceAll(ENC_KEY, ""),
     _env.ENCRYPTED_KEY
   );
+}
+if (_env.S3_REGION?.includes(ENC_KEY)) {
   _env.S3_REGION = await aesGcmDecrypt(
     _env.S3_REGION.replaceAll(ENC_KEY, ""),
     _env.ENCRYPTED_KEY
   );
+}
+if (_env.S3_RAR_PASSWORD?.includes(ENC_KEY)) {
   _env.S3_RAR_PASSWORD = await aesGcmDecrypt(
     _env.S3_RAR_PASSWORD.replaceAll(ENC_KEY, ""),
     _env.ENCRYPTED_KEY

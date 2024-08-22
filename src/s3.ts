@@ -6,6 +6,14 @@ import { addDays } from "date-fns";
 
 // Extracted the common logic of creating a S3 client into a separate function
 const createS3Client = () => {
+  if (
+    !env.S3_ENDPOINT ||
+    !env.S3_REGION ||
+    !env.S3_ACCESS_KEY_ID ||
+    !env.S3_SECRET_KEY
+  ) {
+    return null;
+  }
   return new S3({
     forcePathStyle: false, // Configures to use subdomain/virtual calling format.
     endpoint: env.S3_ENDPOINT,
@@ -20,7 +28,7 @@ const createS3Client = () => {
 export const s3Client = createS3Client();
 
 export const uploadToS3 = async (filePath: string, Key: string) => {
-  return await s3Client.putObject({
+  return await s3Client?.putObject({
     Bucket: env.S3_BUCKET,
     Key,
     Body: await Deno.readFile(filePath),
@@ -28,20 +36,20 @@ export const uploadToS3 = async (filePath: string, Key: string) => {
 };
 
 export const removeOldS3 = async (keepDay: number, folder: string) => {
-  const list = await s3Client.listObjectsV2({
+  const list = await s3Client?.listObjectsV2({
     Bucket: env.S3_BUCKET,
     Prefix: folder,
   });
   const keepDate = addDays(new Date(), -keepDay);
 
-  const objectsToDelete = list.Contents?.filter((file) => {
+  const objectsToDelete = list?.Contents?.filter((file) => {
     // deno-lint-ignore no-explicit-any
     const fileDate = new Date(file.LastModified as any);
     return fileDate < keepDate;
   });
 
   if (objectsToDelete) {
-    await s3Client.deleteObjects({
+    await s3Client?.deleteObjects({
       Bucket: env.S3_BUCKET,
       Delete: {
         Objects: objectsToDelete.map((file) => ({ Key: file.Key! })),
