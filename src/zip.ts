@@ -1,4 +1,4 @@
-import { BlobWriter, ZipWriter } from "@zip-js/zip-js";
+import { BlobWriter, ZipWriter } from "@zip-js/zip-js/data-uri";
 import { parse, join } from "@std/path";
 
 export const packFile = async (backupPath: string, password?: string) => {
