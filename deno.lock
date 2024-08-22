@@ -2,22 +2,28 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@std/assert@^0.226.0": "jsr:@std/assert@0.226.0",
+      "jsr:@crypto/aes-gcm@^1.0.0": "jsr:@crypto/aes-gcm@1.0.0",
       "jsr:@std/dotenv@^0.224.2": "jsr:@std/dotenv@0.224.2",
+      "jsr:@std/encoding": "jsr:@std/encoding@1.0.0",
       "jsr:@std/fs@^0.229.3": "jsr:@std/fs@0.229.3",
       "jsr:@std/path@1.0.0-rc.1": "jsr:@std/path@1.0.0-rc.1",
-      "jsr:@std/path@^0.225.2": "jsr:@std/path@0.225.2",
+      "jsr:@std/path@^1.0.2": "jsr:@std/path@1.0.2",
+      "jsr:@zip-js/zip-js@^2.7.48": "jsr:@zip-js/zip-js@2.7.48",
       "npm:@aws-sdk/client-s3@^3.609.0": "npm:@aws-sdk/client-s3@3.609.0_@aws-sdk+client-sts@3.609.0__@aws-sdk+client-sso-oidc@3.609.0___@aws-sdk+client-sts@3.609.0_@aws-sdk+client-sso-oidc@3.609.0__@aws-sdk+client-sts@3.609.0___@aws-sdk+client-sso-oidc@3.609.0____@aws-sdk+client-sts@3.609.0__@aws-sdk+client-sts@3.609.0___@aws-sdk+client-sso-oidc@3.609.0____@aws-sdk+client-sts@3.609.0_____@aws-sdk+client-sso-oidc@3.609.0___@aws-sdk+client-sso-oidc@3.609.0",
+      "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:date-fns@^3.6.0": "npm:date-fns@3.6.0",
       "npm:zip-a-folder@^3.1.7": "npm:zip-a-folder@3.1.7",
       "npm:zod@^3.23.8": "npm:zod@3.23.8"
     },
     "jsr": {
-      "@std/assert@0.226.0": {
-        "integrity": "0dfb5f7c7723c18cec118e080fec76ce15b4c31154b15ad2bd74822603ef75b3"
+      "@crypto/aes-gcm@1.0.0": {
+        "integrity": "38c02204596199d32e84c689a953ec0188c2807614abfd5df8aeaec7a5c4e931"
       },
       "@std/dotenv@0.224.2": {
         "integrity": "29081695357e4534696c9e986b2560be29c141ccf52daa32b6c20ff5b5c64ab9"
+      },
+      "@std/encoding@1.0.0": {
+        "integrity": "3cabf87b3eadb69126b42998188c87155238ceef805af3f241acca00ddb0cbb2"
       },
       "@std/fs@0.229.3": {
         "integrity": "783bca21f24da92e04c3893c9e79653227ab016c48e96b3078377ebd5222e6eb",
@@ -25,14 +31,14 @@
           "jsr:@std/path@1.0.0-rc.1"
         ]
       },
-      "@std/path@0.225.2": {
-        "integrity": "0f2db41d36b50ef048dcb0399aac720a5348638dd3cb5bf80685bf2a745aa506",
-        "dependencies": [
-          "jsr:@std/assert@^0.226.0"
-        ]
-      },
       "@std/path@1.0.0-rc.1": {
         "integrity": "b8c00ae2f19106a6bb7cbf1ab9be52aa70de1605daeb2dbdc4f87a7cbaf10ff6"
+      },
+      "@std/path@1.0.2": {
+        "integrity": "a452174603f8c620bd278a380c596437a9eef50c891c64b85812f735245d9ec7"
+      },
+      "@zip-js/zip-js@2.7.48": {
+        "integrity": "652809664ae9b25ea7d81c5a9fc1447f4fe70446578b5424ce4531d881d89d0f"
       }
     },
     "npm": {
@@ -2645,6 +2651,10 @@
           "tslib": "tslib@2.6.3"
         }
       },
+      "@types/node@18.16.19": {
+        "integrity": "sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==",
+        "dependencies": {}
+      },
       "abort-controller@3.0.0": {
         "integrity": "sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==",
         "dependencies": {
@@ -3109,17 +3119,34 @@
     }
   },
   "redirects": {
-    "https://deno.land/std/encoding/hex.ts": "https://deno.land/std@0.224.0/encoding/hex.ts"
+    "https://deno.land/std/encoding/hex.ts": "https://deno.land/std@0.224.0/encoding/hex.ts",
+    "https://deno.land/x/crypto/aes.ts": "https://deno.land/x/crypto@v0.10.1/aes.ts",
+    "https://deno.land/x/crypto/block-modes.ts": "https://deno.land/x/crypto@v0.10.1/block-modes.ts"
   },
   "remote": {
     "https://deno.land/std@0.224.0/encoding/_util.ts": "beacef316c1255da9bc8e95afb1fa56ed69baef919c88dc06ae6cb7a6103d376",
-    "https://deno.land/std@0.224.0/encoding/hex.ts": "6270f25e5d85f99fcf315278670ba012b04b7c94b67715b53f30d03249687c07"
+    "https://deno.land/std@0.224.0/encoding/hex.ts": "6270f25e5d85f99fcf315278670ba012b04b7c94b67715b53f30d03249687c07",
+    "https://deno.land/x/crypto@v0.10.1/aes.ts": "0f4e5af07514a07d56ec01b2186c0153f13d6e00c26fc4e70692996af6280e48",
+    "https://deno.land/x/crypto@v0.10.1/block-modes.ts": "a7ef359649a2cf235451e80aed7a5fda612d92ca2b158bf2a724b32899f8e455",
+    "https://deno.land/x/crypto@v0.10.1/src/aes/consts.ts": "582aeed7afda2fe3deac4a60c4a9f29c60a7fb66f56645f95fa0ddab49bde994",
+    "https://deno.land/x/crypto@v0.10.1/src/aes/mod.ts": "883d1e48d033dc4491f3a336c07235c5c4cb0371972476b8cdeea5e94ad2efbe",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/base.ts": "9006474c676782602ede9ea16aa49e8d084fd5670f6050641715a3d3085e1ba5",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/cbc.ts": "ce1ae944dd1912febd1d69c26c3a4ba18caeac9544ac3c62abd8b2429842de19",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/cfb.ts": "a1de2d9b81c0333be6c8d005019db1f4b2956264f8f0f93e7e51e8059ad16147",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/ctr.ts": "06fd8e338dbda0a6a7fa49718a0fd247830759820e61646a6cf611ad69a9d464",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/ecb.ts": "c346d692f16f8efbcc041c25dd761ca223ef92e03bb05457908953bf261ba325",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/mod.ts": "bb7e3ddafa15b1ca024b4b5013b23d134410d01e90ce3d5be5489eb9d5f601c5",
+    "https://deno.land/x/crypto@v0.10.1/src/block-modes/ofb.ts": "0f77075505853b4ba1a55b4edecb17323f8a1489456a3d3b74717565cccbf2ef",
+    "https://deno.land/x/crypto@v0.10.1/src/utils/bytes.ts": "7ccf6cb2d747d9b9de04c9a2494999957c1e86fd4e14bc228aad25283323f5a0",
+    "https://deno.land/x/crypto@v0.10.1/src/utils/padding.ts": "544c51a471a413b15940bf08b285bc6a5db27796ff3cf240564f42701aba01dc"
   },
   "workspace": {
     "dependencies": [
+      "jsr:@crypto/aes-gcm@^1.0.0",
       "jsr:@std/dotenv@^0.224.2",
       "jsr:@std/fs@^0.229.3",
-      "jsr:@std/path@^0.225.2",
+      "jsr:@std/path@^1.0.2",
+      "jsr:@zip-js/zip-js@^2.7.48",
       "npm:@aws-sdk/client-s3@^3.609.0",
       "npm:date-fns@^3.6.0",
       "npm:zip-a-folder@^3.1.7",

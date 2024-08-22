@@ -1,4 +1,7 @@
 .env
+.env.build
+.env.s3
+
 config.*
 build
 decryptData
