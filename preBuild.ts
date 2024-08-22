@@ -1,9 +1,14 @@
 import { copySync, ensureDir, emptyDir } from "@std/fs";
+import { join } from "@std/path";
 
 await ensureDir("build");
 await emptyDir("build");
 
-Deno.copyFileSync(".env.template", `build/.env`);
+Deno.copyFileSync("preBuild/.env.template", `build/.env`);
+Deno.copyFileSync("preBuild/installService.bat", `build/installService.bat`);
+Deno.copyFileSync("preBuild/startService.bat", `build/startService.bat`);
+Deno.copyFileSync("preBuild/stopService.bat", `build/stopService.bat`);
+
 copySync("lib", "build/lib");
 
 Deno.writeTextFile(

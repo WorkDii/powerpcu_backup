@@ -21,6 +21,7 @@ async function removeOld(schedule: string, keepDay: number) {
       Deno.removeSync(join(folder, dirEntry.name));
     }
   }
+  console.log(`Removed old files from folder ${folder}`);
 }
 
 export async function uploadToLocal(backupPath: string) {

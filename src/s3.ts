@@ -56,6 +56,7 @@ export const removeOldS3 = async (keepDay: number, folder: string) => {
       },
     });
   }
+  console.log(`Removed ${objectsToDelete?.length} files from folder ${folder}`);
 };
 
 export const uploadS3AndRemoveOldS3 = async (
