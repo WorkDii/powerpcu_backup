@@ -1,17 +1,9 @@
 import z from "zod";
 import { load } from "@std/dotenv";
-const envS3 = await load({ envPath: ".env.s3" });
 const env = await load();
 const envBuild = await load({ envPath: ".env.build" });
 import { aesGcmDecrypt } from "@crypto/aes-gcm";
 import { join } from "@std/path";
-import { decodeHex } from "jsr:@std/encoding/hex";
-
-const textDecoder = new TextDecoder();
-const hexDecoded = decodeHex(
-  Deno.env.get("ENCRYPTED_KEY") || envBuild["ENCRYPTED_KEY"] || ""
-);
-const defaultEncryptedKey = textDecoder.decode(hexDecoded);
 
 const schema = z.object({
   MYSQLDUMP_PATH: z
@@ -24,8 +16,7 @@ const schema = z.object({
   USER: z.string(),
   PASSWORD: z.string(),
   PREFIX_NAME: z.string(),
-  RAR_PASSWORD: z.string().optional(),
-  // utc time zone
+  ENCRYPTION_PASSWORD: z.string().optional(),
   SCHEDULE: z.string().optional().default("30 20 * * *"), // is 03:30 bangkok time
   LOCAL_BACKUP_PATH: z.string(),
   S3_ENDPOINT: z.string().optional(),
@@ -33,8 +24,9 @@ const schema = z.object({
   S3_ACCESS_KEY_ID: z.string().optional(),
   S3_SECRET_KEY: z.string().optional(),
   S3_BUCKET: z.string().optional(),
-  S3_RAR_PASSWORD: z.string().optional(),
-  ENCRYPTED_KEY: z.string().default(defaultEncryptedKey),
+  ENCRYPTED_KEY: z
+    .string()
+    .default(Deno.env.get("ENCRYPTED_KEY") || envBuild["ENCRYPTED_KEY"] || ""),
   KEEP_FILE_DAILY: z.number().optional().default(14),
   KEEP_FILE_WEEKLY: z.number().optional().default(90),
   KEEP_FILE_MONTHLY: z
@@ -46,43 +38,38 @@ const schema = z.object({
     .optional()
     .default(365 * 5),
 });
-const _env = schema.parse({ ...envS3, ...env });
 
-const ENC_KEY = "|encrypted";
-if (_env.S3_ENDPOINT?.includes(ENC_KEY)) {
-  _env.S3_ENDPOINT = await aesGcmDecrypt(
-    _env.S3_ENDPOINT.replaceAll(ENC_KEY, ""),
-    _env.ENCRYPTED_KEY
-  );
+const _env = schema.parse(env);
+
+const ENCRYPTED_SUFFIX = "|encrypted";
+
+async function decryptIfEncrypted(
+  value: string | undefined,
+  encryptedKey: string
+): Promise<string | undefined> {
+  if (value?.includes(ENCRYPTED_SUFFIX)) {
+    return await aesGcmDecrypt(
+      value.replaceAll(ENCRYPTED_SUFFIX, ""),
+      encryptedKey
+    );
+  }
+  return value;
 }
-if (_env.S3_ACCESS_KEY_ID?.includes(ENC_KEY)) {
-  _env.S3_ACCESS_KEY_ID = await aesGcmDecrypt(
-    _env.S3_ACCESS_KEY_ID.replaceAll(ENC_KEY, ""),
-    _env.ENCRYPTED_KEY
-  );
+
+async function decryptAllFields(
+  env: Record<string, any>
+): Promise<Record<string, any>> {
+  const decryptedEnv: Record<string, any> = {};
+  for (const [key, value] of Object.entries(env)) {
+    if (typeof value === "string") {
+      decryptedEnv[key] = await decryptIfEncrypted(value, env.ENCRYPTED_KEY);
+    } else {
+      decryptedEnv[key] = value;
+    }
+  }
+  return decryptedEnv;
 }
-if (_env.S3_SECRET_KEY?.includes(ENC_KEY)) {
-  _env.S3_SECRET_KEY = await aesGcmDecrypt(
-    _env.S3_SECRET_KEY.replaceAll(ENC_KEY, ""),
-    _env.ENCRYPTED_KEY
-  );
-}
-if (_env.S3_BUCKET?.includes(ENC_KEY)) {
-  _env.S3_BUCKET = await aesGcmDecrypt(
-    _env.S3_BUCKET.replaceAll(ENC_KEY, ""),
-    _env.ENCRYPTED_KEY
-  );
-}
-if (_env.S3_REGION?.includes(ENC_KEY)) {
-  _env.S3_REGION = await aesGcmDecrypt(
-    _env.S3_REGION.replaceAll(ENC_KEY, ""),
-    _env.ENCRYPTED_KEY
-  );
-}
-if (_env.S3_RAR_PASSWORD?.includes(ENC_KEY)) {
-  _env.S3_RAR_PASSWORD = await aesGcmDecrypt(
-    _env.S3_RAR_PASSWORD.replaceAll(ENC_KEY, ""),
-    _env.ENCRYPTED_KEY
-  );
-}
-export default _env;
+
+const decryptedEnv = await decryptAllFields(_env);
+
+export default decryptedEnv;
