@@ -1,6 +1,6 @@
 import { parse } from "@std/path";
 import { removeOldS3, uploadS3AndRemoveOldS3, uploadToS3 } from "./s3.ts";
-import env from "./env.ts";
+import env from "./env/index.ts";
 
 async function uploadToAllFolder(filePath: string) {
   const { name, ext } = parse(filePath);

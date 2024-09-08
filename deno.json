@@ -1,6 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --watch -A main.ts",
+    "dev_preinstall": "deno run --watch -A main.ts --initial-program-check",
     "prebuild": "deno run -A preBuild.ts",
     "postbuild": "deno run -A postBuild.ts",
     "decypt": "deno run -A decrypt.ts",

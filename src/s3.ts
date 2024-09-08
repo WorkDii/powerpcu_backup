@@ -1,8 +1,8 @@
 import { S3 } from "@aws-sdk/client-s3";
-import env from "./env.ts";
 import { parse } from "@std/path";
 
 import { addDays } from "date-fns";
+import env from "./env/index.ts";
 
 // Extracted the common logic of creating a S3 client into a separate function
 const createS3Client = () => {
