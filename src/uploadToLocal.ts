@@ -1,7 +1,7 @@
 import { join, parse } from "@std/path";
-import env from "./env.ts";
 import { ensureDir } from "@std/fs";
 import { addDays } from "date-fns";
+import env from "./env/index.ts";
 
 async function copyFile(schedule: string, backupPath: string) {
   const { name, ext } = parse(backupPath);

@@ -1,6 +1,3 @@
-REM --add the following to the top of your bat file--
-
-
 @echo off
 
 :: BatchGotAdmin
@@ -33,4 +30,23 @@ sc delete power_pcu_backup
 sc stop jhcis_backup_s3
 sc delete jhcis_backup_s3
 
-"C:\power_pcu_backup\lib\nssm-2.24\win64\nssm.exe" install power_pcu_backup "C:\power_pcu_backup\power_pcu_backup.exe"
+REM Install the service
+"%~dp0lib\nssm-2.24\win64\nssm.exe" install power_pcu_backup "%~dp0power_pcu_backup.exe"
+
+REM Configure stdout log
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppStdout "%~dp0power_pcu_backup_stdout.log"
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppStdoutCreationDisposition 4
+
+REM Configure stderr log
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppStderr "%~dp0power_pcu_backup_stderr.log"
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppStderrCreationDisposition 4
+
+REM Set rotation settings (optional)
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppRotateFiles 1
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppRotateOnline 1
+"%~dp0lib\nssm-2.24\win64\nssm.exe" set power_pcu_backup AppRotateBytes 1048576
+
+echo Service installed and configured with logging.
+
+REM Open the service in the Services control panel
+start https://powerpcu.com/backup
