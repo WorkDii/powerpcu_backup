@@ -15,7 +15,7 @@ export const schema = z.object({
   PASSWORD: z.string(),
   PREFIX_NAME: z.string(),
   ENCRYPTION_PASSWORD: z.string().optional(),
-  LOCAL_BACKUP_PATH: z.string(),
+  LOCAL_BACKUP_PATH: z.string().optional().default("local_backup"),
   S3_ENDPOINT: z.string().optional(),
   S3_REGION: z.string().optional(),
   S3_ACCESS_KEY_ID: z.string().optional(),

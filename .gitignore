@@ -2,6 +2,8 @@
 .env.build
 .env.s3
 
+local_backup
+
 config.*
 build
 decryptData
