@@ -1,6 +1,6 @@
 import { load } from "@std/dotenv";
 const env = await load();
-import { aesGcmDecrypt } from "@crypto/aes-gcm";
+import { aes_gcm_decrypt } from "https://deno.land/x/crypto_aes_gcm@2.0.3/index.js";
 import { schema } from "./schema.ts";
 import systemEnv from "./system.ts";
 
@@ -10,7 +10,7 @@ async function decryptIfEncrypted(
   encryptedKey: string
 ): Promise<string | undefined> {
   if (value?.includes(ENCRYPTED_SUFFIX)) {
-    return await aesGcmDecrypt(
+    return await aes_gcm_decrypt(
       value.replaceAll(ENCRYPTED_SUFFIX, ""),
       encryptedKey
     );
