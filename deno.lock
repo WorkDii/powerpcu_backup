@@ -2,7 +2,6 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@crypto/aes-gcm@^1.0.0": "jsr:@crypto/aes-gcm@1.0.0",
       "jsr:@std/dotenv@^0.224.2": "jsr:@std/dotenv@0.224.2",
       "jsr:@std/encoding": "jsr:@std/encoding@1.0.0",
       "jsr:@std/fs@^0.229.3": "jsr:@std/fs@0.229.3",
@@ -16,9 +15,6 @@
       "npm:zod@^3.23.8": "npm:zod@3.23.8"
     },
     "jsr": {
-      "@crypto/aes-gcm@1.0.0": {
-        "integrity": "38c02204596199d32e84c689a953ec0188c2807614abfd5df8aeaec7a5c4e931"
-      },
       "@std/dotenv@0.224.2": {
         "integrity": "29081695357e4534696c9e986b2560be29c141ccf52daa32b6c20ff5b5c64ab9"
       },
@@ -3138,11 +3134,11 @@
     "https://deno.land/x/crypto@v0.10.1/src/block-modes/mod.ts": "bb7e3ddafa15b1ca024b4b5013b23d134410d01e90ce3d5be5489eb9d5f601c5",
     "https://deno.land/x/crypto@v0.10.1/src/block-modes/ofb.ts": "0f77075505853b4ba1a55b4edecb17323f8a1489456a3d3b74717565cccbf2ef",
     "https://deno.land/x/crypto@v0.10.1/src/utils/bytes.ts": "7ccf6cb2d747d9b9de04c9a2494999957c1e86fd4e14bc228aad25283323f5a0",
-    "https://deno.land/x/crypto@v0.10.1/src/utils/padding.ts": "544c51a471a413b15940bf08b285bc6a5db27796ff3cf240564f42701aba01dc"
+    "https://deno.land/x/crypto@v0.10.1/src/utils/padding.ts": "544c51a471a413b15940bf08b285bc6a5db27796ff3cf240564f42701aba01dc",
+    "https://deno.land/x/crypto_aes_gcm@2.0.3/index.js": "50f2bd6335e98deb1c765f3f3738930859fc2e40dde0e23dec124455b601a845"
   },
   "workspace": {
     "dependencies": [
-      "jsr:@crypto/aes-gcm@^1.0.0",
       "jsr:@std/dotenv@^0.224.2",
       "jsr:@std/fs@^0.229.3",
       "jsr:@std/path@^1.0.2",

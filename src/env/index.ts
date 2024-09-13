@@ -1,5 +1,6 @@
 import { load } from "@std/dotenv";
 const env = await load();
+const envProduction = await load({ envPath: "production.env" });
 import { aes_gcm_decrypt } from "https://deno.land/x/crypto_aes_gcm@2.0.3/index.js";
 import { schema } from "./schema.ts";
 import systemEnv from "./system.ts";
@@ -34,6 +35,7 @@ async function decryptAllFields(
   }
   return decryptedEnv;
 }
-const parsedEnv = schema.parse(env);
+const parsedEnv = schema.parse({ ...env, ...envProduction });
+const decryptedEnv = (await decryptAllFields(parsedEnv)) as typeof parsedEnv;
 
-export default await decryptAllFields(parsedEnv);
+export default decryptedEnv;

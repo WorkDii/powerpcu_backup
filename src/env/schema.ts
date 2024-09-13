@@ -8,19 +8,24 @@ export const schema = z.object({
     .string()
     .optional()
     .default(join("lib", "mysql-5.6.45-winx64", "mysqldump.exe")),
-  DATABASE: z.string().optional().default("jhcisdb"),
-  HOST: z.string().optional().default("localhost"),
-  PORT: z.string().optional().default("3306"),
-  USER: z.string(),
-  PASSWORD: z.string(),
-  PREFIX_NAME: z.string(),
+
+  DATABASE: z.string().min(1, "Database name is required"),
+  HOST: z.string().min(1, "Host is required"),
+  PORT: z.string().regex(/^\d+$/, "Port must be a number"),
+  USER: z.string().min(1, "User is required"),
+  PASSWORD: z.string().min(1, "Password is required"),
+  PREFIX_NAME: z.string().min(1, "Prefix name is required"),
   ENCRYPTION_PASSWORD: z.string().optional(),
-  LOCAL_BACKUP_PATH: z.string().optional().default("local_backup"),
+  LOCAL_BACKUP_PATH: z.string().min(1, "Local backup path is required"),
+  SCHEDULE: z.string().optional(),
+  BACKUP_ON_STARTUP: z.string().optional(),
+
   S3_ENDPOINT: z.string().optional(),
   S3_REGION: z.string().optional(),
   S3_ACCESS_KEY_ID: z.string().optional(),
   S3_SECRET_KEY: z.string().optional(),
   S3_BUCKET: z.string().optional(),
+  S3_ENCRYPTION_PASSWORD: z.string().optional(),
 
   KEEP_FILE_DAILY: z.number().optional().default(14),
   KEEP_FILE_WEEKLY: z.number().optional().default(90),
