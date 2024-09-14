@@ -31,8 +31,8 @@ export async function uploadFile(filePath: string) {
     console.timeEnd("[monthly] S3");
   }
 
-  // yearly
-  if (new Date().getMonth() === 0 && new Date().getDate() === 1) {
+  // yearly  วันที่ 1 เดือน 10 คือวันที่สำรองข้อมูล รายปี
+  if (new Date().getMonth() === 9 && new Date().getDate() === 1) {
     console.time("[yearly] S3");
     uploadS3AndRemoveOldS3(filePath, "yearly", env.KEEP_FILE_YEARLY);
     console.timeEnd("[yearly] S3");
