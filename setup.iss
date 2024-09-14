@@ -1,6 +1,6 @@
 [Setup]
 AppName=PowerPCU-Backup
-AppVersion=1.5
+AppVersion=2.0
 WizardStyle=modern
 DefaultDirName={autopf}\PowerPCU-Backup
 DefaultGroupName=PowerPCU-Backup
@@ -35,7 +35,7 @@ function NextButtonClick(CurPageID: Integer): Boolean;
 begin
   if CurPageID = wpReady then begin
     DownloadPage.Clear;
-    DownloadPage.Add('https://download.powerpcu.com/power_pcu_backup.zip', 'power_pcu_backup.zip', '');
+    DownloadPage.Add('https://powerpcu.com/backup/download', 'power_pcu_backup.zip', '');
     DownloadPage.Show;
     try
       try
