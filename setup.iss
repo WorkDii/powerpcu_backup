@@ -1,19 +1,28 @@
 [Setup]
 AppName=PowerPCU-Backup
-AppVersion=2.0
+AppVersion=2.1
 WizardStyle=modern
 DefaultDirName={autopf}\PowerPCU-Backup
 DefaultGroupName=PowerPCU-Backup
 OutputDir=userdocs:Inno Setup Examples Output
+OutputBaseFilename=power_pcu_backup_installer
 DisableDirPage=no
 DisableProgramGroupPage=yes
 UninstallDisplayIcon={app}\power_pcu_backup.exe
 UninstallDisplayName=PowerPCU-Backup
 Uninstallable=yes
+LicenseFile=License.md
+
+[Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
+
+[Files]
+Source: "License.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\PowerPCU-Backup"; Filename: "{app}\power_pcu_backup.exe"
 Name: "{group}\Uninstall PowerPCU-Backup"; Filename: "{uninstallexe}"
+
 [Code]
 var
   DownloadPage: TDownloadWizardPage;
@@ -32,8 +41,13 @@ begin
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  ResultCode: Integer;
 begin
   if CurPageID = wpReady then begin
+    // Stop the existing service before proceeding with the installation
+    Exec(ExpandConstant('{sys}\sc.exe'), 'stop power_pcu_backup', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+    
     DownloadPage.Clear;
     DownloadPage.Add('https://powerpcu.com/backup/download', 'power_pcu_backup.zip', '');
     DownloadPage.Show;
