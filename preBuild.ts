@@ -7,6 +7,7 @@ Deno.copyFileSync("preBuild/startService.bat", `build/startService.bat`);
 Deno.copyFileSync("preBuild/stopService.bat", `build/stopService.bat`);
 
 copySync("lib", "build/lib");
+copySync("License.md", "build/License.md");
 
 Deno.writeTextFile(
   "build/Readme.txt",
