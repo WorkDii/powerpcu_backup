@@ -17,8 +17,6 @@ export const schema = z.object({
   PREFIX_NAME: z.string().min(1, "Prefix name is required"),
   ENCRYPTION_PASSWORD: z.string().optional(),
   LOCAL_BACKUP_PATH: z.string().min(1, "Local backup path is required"),
-  SCHEDULE: z.string().optional(),
-  BACKUP_ON_STARTUP: z.string().optional(),
 
   S3_ENDPOINT: z.string().optional(),
   S3_REGION: z.string().optional(),
