@@ -25,14 +25,14 @@ export const schema = z.object({
   S3_BUCKET: z.string().optional(),
   S3_ENCRYPTION_PASSWORD: z.string().optional(),
 
-  KEEP_FILE_DAILY: z.number().optional().default(14),
-  KEEP_FILE_WEEKLY: z.number().optional().default(90),
+  KEEP_FILE_DAILY: z.number({ coerce: true }).optional().default(14),
+  KEEP_FILE_WEEKLY: z.number({ coerce: true }).optional().default(90),
   KEEP_FILE_MONTHLY: z
-    .number()
+    .number({ coerce: true })
     .optional()
     .default(365 * 2),
   KEEP_FILE_YEARLY: z
-    .number()
+    .number({ coerce: true })
     .optional()
     .default(365 * 5),
 });
