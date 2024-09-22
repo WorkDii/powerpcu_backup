@@ -17,27 +17,33 @@ export async function performBackup() {
     env.PASSWORD,
     env.PREFIX_NAME
   );
-  if (
-    env.S3_ENDPOINT &&
-    env.S3_BUCKET &&
-    env.S3_ACCESS_KEY_ID &&
-    env.S3_SECRET_KEY &&
-    env.S3_REGION &&
-    env.S3_ENCRYPTION_PASSWORD
-  ) {
-    const packedFilePath = await packFile(
+  try {
+    const packedFileLocalPath = await packFile(
       backupPath,
-      env.S3_ENCRYPTION_PASSWORD
+      env.ENCRYPTION_PASSWORD
     );
-    await uploadFile(packedFilePath);
-  } else {
-    console.log("S3 config not found, skip upload to S3");
+    await uploadToLocal(packedFileLocalPath);
+
+    if (
+      env.S3_ENDPOINT &&
+      env.S3_BUCKET &&
+      env.S3_ACCESS_KEY_ID &&
+      env.S3_SECRET_KEY &&
+      env.S3_REGION &&
+      env.S3_ENCRYPTION_PASSWORD
+    ) {
+      const packedFilePath = await packFile(
+        backupPath,
+        env.S3_ENCRYPTION_PASSWORD
+      );
+      await uploadFile(packedFilePath);
+    } else {
+      console.log("S3 config not found, skip upload to S3");
+    }
+  } catch (error) {
+    console.log("performBackup error", error);
+  } finally {
+    await removeTemp(backupPath);
+    console.timeEnd("backup");
   }
-  const packedFileLocalPath = await packFile(
-    backupPath,
-    env.ENCRYPTION_PASSWORD
-  );
-  await uploadToLocal(packedFileLocalPath);
-  await removeTemp(backupPath);
-  console.timeEnd("backup");
 }
