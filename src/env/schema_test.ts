@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert";
-import { schema } from "./schema.ts";
+import { schema, systemSchema } from "./schema.ts";
 
 Deno.test("schema test", () => {
   const parsedData = schema.parse({
@@ -26,4 +26,30 @@ Deno.test("schema test", () => {
     "lib\\mysql-5.6.45-winx64\\mysqldump.exe",
     parsedData.MYSQLDUMP_PATH
   );
+});
+
+Deno.test("systemSchema test", () => {
+  const parsedData = systemSchema.parse({
+    ENCRYPTED_KEY: "test",
+    SCHEDULE: "30 20 * * *",
+    BACKUP_ON_STARTUP: " True",
+  });
+  assertEquals("test", parsedData.ENCRYPTED_KEY);
+  assertEquals("30 20 * * *", parsedData.SCHEDULE);
+  assertEquals(true, parsedData.BACKUP_ON_STARTUP);
+
+  const parsedDataFalse = systemSchema.parse({
+    ENCRYPTED_KEY: "test",
+    SCHEDULE: "30 20 * * *",
+    BACKUP_ON_STARTUP: "false",
+  });
+  assertEquals(false, parsedDataFalse.BACKUP_ON_STARTUP);
+
+  const parsedDataBoolean = systemSchema.parse({
+    ENCRYPTED_KEY: "test",
+    SCHEDULE: "30 20 * * *",
+    BACKUP_ON_STARTUP: true,
+  });
+
+  assertEquals(true, parsedDataBoolean.BACKUP_ON_STARTUP);
 });

@@ -43,7 +43,12 @@ export const systemSchema = z.object({
     .string()
     .default(Deno.env.get("ENCRYPTED_KEY") || envBuild["ENCRYPTED_KEY"] || ""),
   SCHEDULE: z.string().optional().default("30 20 * * *"), // is 03:30 bangkok time
-  BACKUP_ON_STARTUP: z.boolean().default(true),
+  BACKUP_ON_STARTUP: z
+    .union([
+      z.boolean(),
+      z.string().transform((val) => val.trim().toLowerCase() === "true"),
+    ])
+    .default(true),
 });
 
 export type SystemEnv = z.infer<typeof systemSchema>;
