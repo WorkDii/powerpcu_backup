@@ -8,6 +8,9 @@ export const schema = z.object({
     .string()
     .optional()
     .default(join("lib", "mysql-5.6.45-winx64", "mysqldump.exe")),
+  SEVENZIP_PATH: z
+    .string()
+    .default(join("lib", "7-Zip", "7z.exe")),
 
   DATABASE: z.string().min(1, "Database name is required"),
   HOST: z.string().min(1, "Host is required"),
