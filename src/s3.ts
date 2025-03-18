@@ -1,4 +1,4 @@
-import { S3 } from "@aws-sdk/client-s3";
+import { S3Client } from "@bradenmacdonald/s3-lite-client";
 import { parse } from "@std/path";
 
 import { addDays } from "date-fns";
@@ -10,53 +10,59 @@ const createS3Client = () => {
     !env.S3_ENDPOINT ||
     !env.S3_REGION ||
     !env.S3_ACCESS_KEY_ID ||
-    !env.S3_SECRET_KEY
+    !env.S3_SECRET_KEY ||
+    !env.S3_BUCKET
   ) {
     return null;
   }
-  return new S3({
-    forcePathStyle: false, // Configures to use subdomain/virtual calling format.
-    endpoint: env.S3_ENDPOINT,
+  return new S3Client({
+    endPoint: env.S3_ENDPOINT,
     region: env.S3_REGION,
-    credentials: {
-      accessKeyId: env.S3_ACCESS_KEY_ID,
-      secretAccessKey: env.S3_SECRET_KEY,
-    },
+    bucket: env.S3_BUCKET,
+    accessKey: env.S3_ACCESS_KEY_ID,
+    secretKey: env.S3_SECRET_KEY,
   });
 };
 
 export const s3Client = createS3Client();
 
 export const uploadToS3 = async (filePath: string, Key: string) => {
-  return await s3Client?.putObject({
-    Bucket: env.S3_BUCKET,
+  await s3Client?.putObject(
     Key,
-    Body: await Deno.readFile(filePath),
-  });
+    await Deno.readFile(filePath)
+  );
 };
 
 export const removeOldS3 = async (keepDay: number, folder: string) => {
-  const list = await s3Client?.listObjectsV2({
-    Bucket: env.S3_BUCKET,
-    Prefix: folder,
+  const list = await s3Client?.listObjects({
+    prefix: folder,
   });
   const keepDate = addDays(new Date(), -keepDay);
-
-  const objectsToDelete = list?.Contents?.filter((file) => {
-    // deno-lint-ignore no-explicit-any
-    const fileDate = new Date(file.LastModified as any);
-    return fileDate < keepDate;
-  });
-
-  if (objectsToDelete) {
-    await s3Client?.deleteObjects({
-      Bucket: env.S3_BUCKET,
-      Delete: {
-        Objects: objectsToDelete.map((file) => ({ Key: file.Key! })),
-      },
-    });
+  if (list) {
+    for await (const obj of list) {
+      const fileDate = new Date(obj.lastModified);
+      if (fileDate < keepDate) {
+        await s3Client?.deleteObject(obj.key);
+      }
+    }
   }
-  console.log(`Removed ${objectsToDelete?.length} files from folder ${folder}`);
+};
+
+export const remainLastObject = async (prefix: string) => {
+  const list = await s3Client?.listObjects({
+    prefix,
+  });
+  const objects = [];
+  for await (const obj of list || []) {
+    objects.push(obj);
+  }
+  const sortedObjects = objects.sort((a, b) =>
+    b.lastModified.getTime() - a.lastModified.getTime()
+  );
+  // Keep the newest file, delete all others
+  for (let i = 1; i < sortedObjects.length; i++) {
+    await s3Client?.deleteObject(sortedObjects[i].key);
+  }
 };
 
 export const uploadS3AndRemoveOldS3 = async (

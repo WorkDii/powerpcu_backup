@@ -1,11 +1,11 @@
 import { parse } from "@std/path";
-import { removeOldS3, uploadS3AndRemoveOldS3, uploadToS3 } from "./s3.ts";
+import { remainLastObject, uploadS3AndRemoveOldS3, uploadToS3 } from "./s3.ts";
 import env from "./env/index.ts";
 
 async function uploadToAllFolder(filePath: string) {
   const { name, ext } = parse(filePath);
   await uploadToS3(filePath, `all/${name + ext}`);
-  await removeOldS3(1, "all");
+  await remainLastObject(`all/${env.PREFIX_NAME}_${env.DATABASE}`);
 }
 export async function uploadFile(filePath: string) {
   console.log(

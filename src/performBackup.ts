@@ -15,12 +15,13 @@ export async function performBackup() {
     env.PORT,
     env.USER,
     env.PASSWORD,
-    env.PREFIX_NAME
+    env.PREFIX_NAME,
   );
   try {
     const packedFileLocalPath = await packFile(
       backupPath,
-      env.ENCRYPTION_PASSWORD
+      env.SEVENZIP_PATH,
+      env.ENCRYPTION_PASSWORD,
     );
     await uploadToLocal(packedFileLocalPath);
 
@@ -34,6 +35,7 @@ export async function performBackup() {
     ) {
       const packedFilePath = await packFile(
         backupPath,
+        env.SEVENZIP_PATH,
         env.S3_ENCRYPTION_PASSWORD
       );
       await uploadFile(packedFilePath);
