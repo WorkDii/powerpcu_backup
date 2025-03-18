@@ -18,7 +18,7 @@ Deno.writeTextFile(
 
   หลักการทำงาน
   1. โปรแกรมจะทำการสำรองข้อมูล จากฐานข้อมูล
-  2. ทำการ compress ไฟล์ เป็น .rar และ encrypt ด้วย password (OPTION)
+  2. ทำการ compress ไฟล์ เป็น .zip และ encrypt ด้วย password (OPTION)
   3. โปรแกรมจะทำการส่งไฟล์ไปยัง S3
   4. โปรแกรมจะทำการส่งไฟล์ไปยัง local
   5. โปรแกรมจะทำการลบไฟล์ที่เก่าออกจาก local และ S3
