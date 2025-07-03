@@ -22,6 +22,8 @@ export const makeBackupFile = async (
       "/C",
       mysqldumpPath,
       database,
+      "--routines",
+      "--events",
       `--result-file=${tempFilePath}`,
       `--host=${host}`,
       `--port=${port}`,

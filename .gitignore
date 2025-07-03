@@ -7,3 +7,4 @@ local_backup
 config.*
 build
 decryptData
+config_file
